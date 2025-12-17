@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReBlade — Coffee Grinder Burr Sharpening</title>
+  <meta name="description" content="ReBlade restores coffee grinder burr sharpness and grind consistency. Ship your burrs, we sharpen and return with a condition report." />
+  <style>
+    :root{
+      --bg:#0b0c0f;
+      --card:#12141a;
+      --muted:#9aa3b2;
+      --text:#eef2ff;
+      --line:rgba(255,255,255,.10);
+      --accent:#b6793e; /* coffee bronze */
+      --accent2:#6ee7b7; /* soft mint for subtle highlights */
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+      --radius: 18px;
+      --max: 1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 10% 0%, rgba(182,121,62,.18), transparent 55%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(110,231,183,.10), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      line-height:1.5;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 20px}
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,12,15,.65);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:800; letter-spacing:.2px;
+    }
+    .mark{
+      width:38px; height:38px; border-radius:12px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(182,121,62,.95), rgba(182,121,62,.45));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+    .mark svg{width:26px; height:26px}
+    .brand-name{
+      display:flex; flex-direction:column; line-height:1.05;
+    }
+    .brand-name span:first-child{font-size:16px}
+    .brand-name span:last-child{font-size:12px; color:var(--muted); font-weight:600}
+    .links{display:flex; align-items:center; gap:18px; flex-wrap:wrap}
+    .links a{color:var(--muted); font-weight:650; font-size:14px}
+    .links a:hover{color:var(--text)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:11px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight:750;
+      gap:8px;
+      cursor:pointer;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
+      user-select:none;
+    }
+    .btn:hover{background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.22)}
+    .btn:active{transform: translateY(1px)}
+    .btn-primary{
+      background: linear-gradient(135deg, rgba(182,121,62,1), rgba(182,121,62,.55));
+      border-color: rgba(182,121,62,.65);
+    }
+    .btn-primary:hover{background: linear-gradient(135deg, rgba(196,134,74,1), rgba(182,121,62,.62))}
+    .hero{
+      padding:52px 0 30px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:26px;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){
+      .hero-grid{grid-template-columns: 1fr; }
+      .links{display:none}
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      font-weight:650;
+      font-size:13px;
+      width: fit-content;
+    }
+    .badge b{color: var(--text)}
+    h1{
+      margin:14px 0 10px;
+      font-size: clamp(34px, 4.2vw, 54px);
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 56ch;
+      margin: 0 0 18px;
+    }
+    .cta-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+    .fine{
+      margin-top:14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .card{
+      border:1px solid var(--line);
+      background: rgba(18,20,26,.78);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-card{
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-height: 100%;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 250px at 20% 20%, rgba(182,121,62,.22), transparent 55%),
+                  radial-gradient(450px 260px at 90% 40%, rgba(110,231,183,.12), transparent 55%);
+      pointer-events:none;
+    }
+    .hero-card > *{position:relative}
+    .kpis{
+      display:grid; gap:10px;
+      grid-template-columns: 1fr 1fr;
+    }
+    .kpi{
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+    .kpi .top{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .kpi .label{color: var(--muted); font-weight:650; font-size:12px}
+    .kpi .value{font-weight:850; font-size:16px}
+    .kpi .hint{color: var(--muted); font-size:12px; margin-top:6px}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight:650;
+    }
+    section{padding:34px 0}
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:16px; flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+    h2{
+      margin:0;
+      font-size: 26px;
+      letter-spacing:-.3px;
+    }
+    .section-head p{margin:0; color:var(--muted); max-width: 70ch}
+    .grid-3{
+      display:grid; gap:14px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 920px){ .grid-3{grid-template-columns:1fr} }
+    .feature{padding:16px}
+    .feature h3{margin:6px 0 6px; font-size:16px}
+    .feature p{margin:0; color:var(--muted); font-size:14px}
+    .steps{
+      display:grid; gap:14px;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 920px){ .steps{grid-template-columns:1fr} }
+    .step{padding:16px; position:relative; overflow:hidden}
+    .step .n{
+      width:32px; height:32px; border-radius:12px;
+      display:grid; place-items:center;
+      background: rgba(182,121,62,.18);
+      border:1px solid rgba(182,121,62,.35);
+      font-weight:850;
+      margin-bottom:10px;
+    }
+    .pricing{
+      display:grid; gap:14px;
+      grid-template-columns: 1fr 1fr;
+      align-items:stretch;
+    }
+    @media (max-width: 920px){ .pricing{grid-template-columns:1fr} }
+    .plan{padding:18px; display:flex; flex-direction:column; gap:10px}
+    .plan .title{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .plan h3{margin:0; font-size:18px}
+    .price{
+      font-weight:900;
+      font-size:22px;
+      letter-spacing:-.3px;
+    }
+    ul{margin:0; padding-left:18px; color:var(--muted)}
+    li{margin:6px 0}
+    .plan .footer{margin-top:auto; display:flex; gap:10px; flex-wrap:wrap}
+    .faq{
+      display:grid; gap:10px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 920px){ .faq{grid-template-columns:1fr} }
+    details{
+      padding:14px 14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:800;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    details p{margin:10px 0 0; color:var(--muted); font-size:14px}
+    .footer{
+      padding:28px 0 36px;
+      border-top:1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    /* Modal */
+    .modal-backdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.62);
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 20px;
+      z-index: 100;
+    }
+    .modal{
+      width: min(720px, 100%);
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(18,20,26,.96);
+      box-shadow: 0 20px 70px rgba(0,0,0,.65);
+      overflow:hidden;
+    }
+    .modal-head{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+    }
+    .modal-head b{font-size:14px}
+    .x{
+      width:36px; height:36px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      cursor:pointer;
+    }
+    .modal-body{padding:16px}
+    .progress{display:flex; gap:8px; margin-bottom:14px}
+    .dot{
+      height:8px; flex:1;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .dot.on{
+      background: rgba(182,121,62,.35);
+      border-color: rgba(182,121,62,.55);
+    }
+    .form-grid{
+      display:grid; gap:12px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 680px){ .form-grid{grid-template-columns:1fr} }
+    label{display:block; font-size:12px; color: var(--muted); font-weight:700; margin-bottom:6px}
+    input, select, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{min-height: 92px; resize: vertical}
+    .row{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin-top:14px}
+    .note{color: var(--muted); font-size: 12px; margin-top: 10px}
+    .hidden{display:none !important}
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="ReBlade Home">
+        <div class="mark" aria-hidden="true">
+          <!-- Burr-style spiral icon (SVG) -->
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2a10 10 0 1 0 10 10" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 5a7 7 0 1 0 7 7" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 8a4 4 0 1 0 4 4" stroke="rgba(255,255,255,.8)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="1.5" fill="rgba(255,255,255,.9)"/>
+          </svg>
+        </div>
+        <div class="brand-name">
+          <span>Re<span style="color:var(--accent)">Blade</span></span>
+          <span>Coffee burr sharpening</span>
+        </div>
+      </a>
+
+      <div class="links" aria-label="Primary Navigation">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#expand">Future</a>
+      </div>
+
+      <button class="btn btn-primary" id="openBook">
+        Book Sharpening
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <main id="top" class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="badge">
+          <b>Ship-only</b> service for <b>home users</b> • coffee burrs <b>only</b> (for now)
+        </div>
+
+        <h1>Sharpen your grinder burrs. Don’t replace them.</h1>
+        <p class="sub">
+          ReBlade restores burr sharpness and grind consistency so your espresso and filter brews stay clean, repeatable, and easy to dial in.
+          Simple online booking. Ship your burrs. We sharpen and return them with a condition report.
+        </p>
+
+        <div class="cta-row">
+          <button class="btn btn-primary" id="openBook2">Book Sharpening</button>
+          <a class="btn" href="#how">See how it works</a>
+        </div>
+
+        <p class="fine">
+          Prototype note: This is an MVP site for a Design Thinking project. Pricing and turnaround can be refined through testing.
+        </p>
+      </div>
+
+      <div class="card hero-card" aria-label="Service summary">
+        <div class="pill">What you get</div>
+        <div class="kpis">
+          <div class="kpi">
+            <div class="top"><div class="label">Focus</div><div class="value">Coffee burrs</div></div>
+            <div class="hint">Flat & conical burrs with removable sets.</div>
+          </div>
+          <div class="kpi">
+            <div class="top"><div class="label">Turnaround</div><div class="value">3–5 days</div></div>
+            <div class="hint">Typical processing time (plus shipping).</div>
+          </div>
+          <div class="kpi">
+            <div class="top"><div class="label">Outcome</div><div class="value">More consistent grind</div></div>
+            <div class="hint">Improved particle uniformity for steadier extraction.</div>
+          </div>
+          <div class="kpi">
+            <div class="top"><div class="label">Trust</div><div class="value">Condition report</div></div>
+            <div class="hint">Wear notes + recommendations.</div>
+          </div>
+        </div>
+
+        <div class="pill">Why it matters</div>
+        <div style="color:var(--muted); font-size:14px">
+          Dull edges can increase fines, stall shots, and make dialing-in frustrating. ReBlade is designed to reduce waste and extend burr life.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FEATURES -->
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Built for home baristas</h2>
+          <p>Fast booking, simple shipping, and a clear explanation of what you’re paying for.</p>
+        </div>
+        <button class="btn" id="openBook3">Start booking</button>
+      </div>
+
+      <div class="grid-3">
+        <div class="card feature">
+          <div class="pill">Performance</div>
+          <h3>Better extraction consistency</h3>
+          <p>Restore cutting edges to help grind more uniformly for steadier shot times and cleaner flavour.</p>
+        </div>
+        <div class="card feature">
+          <div class="pill">Value</div>
+          <h3>Save vs replacement</h3>
+          <p>Sharpening can extend burr life and delay costly replacements — especially on premium burr sets.</p>
+        </div>
+        <div class="card feature">
+          <div class="pill">Clarity</div>
+          <h3>Condition report included</h3>
+          <p>We return your burrs with notes on wear, edge condition, and whether replacement is recommended.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>How it works</h2>
+          <p>Four simple steps, designed for low friction (no app, no account required).</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="card step">
+          <div class="n">1</div>
+          <h3>Tell us your grinder</h3>
+          <p style="margin:0;color:var(--muted);font-size:14px">Select burr type, diameter, and your grinder model in the booking form.</p>
+        </div>
+        <div class="card step">
+          <div class="n">2</div>
+          <h3>Ship your burrs</h3>
+          <p style="margin:0;color:var(--muted);font-size:14px">We email packing guidance so your burrs arrive safely.</p>
+        </div>
+        <div class="card step">
+          <div class="n">3</div>
+          <h3>Sharpen + inspect</h3>
+          <p style="margin:0;color:var(--muted);font-size:14px">Precision sharpening with a quick check for uneven wear or damage.</p>
+        </div>
+        <div class="card step">
+          <div class="n">4</div>
+          <h3>Return + report</h3>
+          <p style="margin:0;color:var(--muted);font-size:14px">Burrs shipped back to you with condition notes and recommendations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>Pricing</h2>
+          <p>Prototype pricing shown as “From €—” so you can validate willingness-to-pay in user tests.</p>
+        </div>
+      </div>
+
+      <div class="pricing">
+        <div class="card plan">
+          <div class="title">
+            <h3>ReBlade Refresh</h3>
+            <div class="price">From €—</div>
+          </div>
+          <div class="pill">Sharpening service</div>
+          <ul>
+            <li>Burr sharpening (flat or conical)</li>
+            <li>Basic inspection</li>
+            <li>Return shipping calculated at checkout</li>
+          </ul>
+          <div class="footer">
+            <button class="btn btn-primary" id="openBook4">Book Refresh</button>
+            <a class="btn" href="#faq">Questions?</a>
+          </div>
+        </div>
+
+        <div class="card plan" style="border-color: rgba(182,121,62,.35)">
+          <div class="title">
+            <h3>ReBlade Plus</h3>
+            <div class="price">From €—</div>
+          </div>
+          <div class="pill">Sharpen + condition check</div>
+          <ul>
+            <li>Sharpening + deeper wear notes</li>
+            <li>Edge condition summary</li>
+            <li>Usage recommendations</li>
+          </ul>
+          <div class="footer">
+            <button class="btn btn-primary" id="openBook5">Book Plus</button>
+            <span class="pill">Most chosen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2>FAQ</h2>
+          <p>Keep it simple, honest, and confidence-building (perfect for a prototype).</p>
+        </div>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>How often do burrs need sharpening?</summary>
+          <p>It depends on usage, beans, and burr material. For home users, it’s typically a long-interval service — which is why a website MVP is ideal.</p>
+        </details>
+        <details>
+          <summary>Will sharpening change burr geometry?</summary>
+          <p>The goal is to restore cutting edges without changing the intended burr design. If we spot damage or heavy wear, we’ll flag it in the report.</p>
+        </details>
+        <details>
+          <summary>What grinders do you support?</summary>
+          <p>Most home grinders with removable burr sets. In the prototype, you can list common brands in the booking form dropdown.</p>
+        </details>
+        <details>
+          <summary>What if my burrs are too worn?</summary>
+          <p>We’ll notify you before proceeding and recommend replacement if sharpening wouldn’t deliver a meaningful improvement.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUTURE EXPANSION -->
+  <section id="expand">
+    <div class="wrap">
+      <div class="card" style="padding:18px">
+        <div class="section-head" style="margin-bottom:6px">
+          <div>
+            <h2>Future expansion</h2>
+            <p>ReBlade starts with coffee burrs (clear niche, clear value). Once proven, the same booking + shipping model can extend to other precision sharpening services.</p>
+          </div>
+          <button class="btn" id="openBook6">Book now</button>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px">
+          <span class="pill">Phase 1: Coffee burrs</span>
+          <span class="pill">Phase 2: Other precision parts</span>
+          <span class="pill">Phase 3: B2B / cafés</span>
+        </div>
+        <div class="note">For your report: this shows scalability without overbuilding the MVP.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap" style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap">
+      <div>© <span id="year"></span> ReBlade — Coffee Grinder Burr Sharpening</div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOOKING MODAL -->
+  <div class="modal-backdrop" id="backdrop" role="dialog" aria-modal="true" aria-label="Book Sharpening">
+    <div class="modal">
+      <div class="modal-head">
+        <b>Book Sharpening</b>
+        <button class="x" id="closeBook" aria-label="Close booking">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="progress" aria-label="Progress">
+          <div class="dot on" data-dot="1"></div>
+          <div class="dot" data-dot="2"></div>
+          <div class="dot" data-dot="3"></div>
+          <div class="dot" data-dot="4"></div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="stepPane" data-step="1">
+          <div class="form-grid">
+            <div>
+              <label>Grinder brand</label>
+              <select id="brand">
+                <option>Baratza</option>
+                <option>Eureka</option>
+                <option>Niche</option>
+                <option>DF64 / DF83</option>
+                <option>Mazzer</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label>Grinder model</label>
+              <input id="model" placeholder="e.g., Specialità / Zero / Encore" />
+            </div>
+            <div>
+              <label>Burr type</label>
+              <select id="type">
+                <option>Flat</option>
+                <option>Conical</option>
+              </select>
+            </div>
+            <div>
+              <label>Burr diameter (mm)</label>
+              <input id="diam" placeholder="e.g., 54, 58, 64" />
+            </div>
+          </div>
+          <div class="note">Tip: for the prototype, these fields help validate what users know about their grinder.</div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="stepPane hidden" data-step="2">
+          <div class="form-grid">
+            <div>
+              <label>Service</label>
+              <select id="service">
+                <option>ReBlade Refresh</option>
+                <option selected>ReBlade Plus</option>
+              </select>
+            </div>
+            <div>
+              <label>Add-on</label>
+              <select id="addon">
+                <option>None</option>
+                <option>Deep cleaning</option>
+              </select>
+            </div>
+          </div>
+          <div class="note">In your report: Step 2 tests willingness-to-pay and what “extras” people value.</div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="stepPane hidden" data-step="3">
+          <div class="form-grid">
+            <div>
+              <label>Shipping method</label>
+              <input value="Ship to ReBlade (address provided after booking)" disabled />
+            </div>
+            <div>
+              <label>Return shipping</label>
+              <select id="return">
+                <option>Standard tracked</option>
+                <option>Insured tracked</option>
+              </select>
+            </div>
+          </div>
+          <div class="note">Prototype note: you can add a “packing guide” PDF later if your lecturer likes extras.</div>
+        </div>
+
+        <!-- STEP 4 -->
+        <div class="stepPane hidden" data-step="4">
+          <div class="form-grid">
+            <div>
+              <label>Name</label>
+              <input id="name" placeholder="Your name" />
+            </div>
+            <div>
+              <label>Email</label>
+              <input id="email" placeholder="you@email.com" />
+            </div>
+            <div style="grid-column:1/-1">
+              <label>Shipping address</label>
+              <input id="addr" placeholder="Address for return shipping" />
+            </div>
+            <div style="grid-column:1/-1">
+              <label>Notes (optional)</label>
+              <textarea id="notes" placeholder="e.g., inconsistent shots, lots of fines, hard to dial in..."></textarea>
+            </div>
+          </div>
+          <div class="note">This can submit to nowhere — your prototype only needs to demonstrate the flow.</div>
+        </div>
+
+        <div class="row">
+          <button class="btn" id="prevBtn">Back</button>
+          <button class="btn btn-primary" id="nextBtn">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Modal logic (prototype flow)
+    const backdrop = document.getElementById("backdrop");
+    const openers = ["openBook","openBook2","openBook3","openBook4","openBook5","openBook6"]
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    const closeBtn = document.getElementById("closeBook");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const panes = Array.from(document.querySelectorAll(".stepPane"));
+    const dots = Array.from(document.querySelectorAll(".dot"));
+
+    let step = 1;
+
+    function showModal(){
+      backdrop.style.display = "flex";
+      step = 1;
+      render();
+    }
+    function hideModal(){
+      backdrop.style.display = "none";
+    }
+    function render(){
+      panes.forEach(p => p.classList.toggle("hidden", Number(p.dataset.step) !== step));
+      dots.forEach(d => d.classList.toggle("on", Number(d.dataset.dot) <= step));
+      prevBtn.style.visibility = (step === 1) ? "hidden" : "visible";
+      nextBtn.textContent = (step === 4) ? "Confirm booking" : "Next";
+    }
+
+    openers.forEach(btn => btn.addEventListener("click", showModal));
+    closeBtn.addEventListener("click", hideModal);
+    backdrop.addEventListener("click", (e) => { if(e.target === backdrop) hideModal(); });
+
+    prevBtn.addEventListener("click", () => { if(step > 1){ step--; render(); }});
+    nextBtn.addEventListener("click", () => {
+      if(step < 4){ step++; render(); return; }
+
+      // "Submit" prototype confirmation
+      const name = document.getElementById("name").value || "there";
+      alert(`✅ Booking received, ${name}.\n\nPrototype: We’ll email packing instructions and shipping details shortly.`);
+      hideModal();
+    });
+
+    // Keyboard close
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && backdrop.style.display === "flex") hideModal();
+    });
+  </script>
+</body>
+</html>
